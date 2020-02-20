@@ -1,0 +1,53 @@
+import pandas as pd, numpy as mp, matplotlib.pyplot as plt, datetime as dt
+
+con = pd.read_csv('Datasets/cleaned_concrete_water.csv')
+mv = pd.read_csv('Datasets/cleaned_mount_vernon_water.csv')
+road_c = pd.read_csv('Datasets/Road_closure.csv')
+road_haz = pd.read_csv('Datasets/road_hazard.csv')
+
+con['datetime'] = pd.to_datetime(con['datetime'])
+mv['datetime'] = pd.to_datetime(mv['datetime'])
+road_c.drop('Unnamed: 0', axis = 1, inplace = True)
+road_haz.drop('Unnamed: 0', axis = 1, inplace = True)
+
+city = input('Enter the First Letter of your City Name: ')
+clock = input('Enter Date & Time Rounded to the previous Quarter Hour (Format = mm-dd HH:MM): ')
+clock = '2019-' + clock +':00'
+clock = pd.to_datetime(clock,
+               format = '%Y%m%d %H:%M:%S')
+
+
+if city.lower() == 'c':
+    find_clock_c = con.loc[con['datetime'] == (clock),:].reset_index(drop = True)
+    print(find_clock_c)
+    print()
+    print()
+    if (find_clock_c.loc[0,'gauge_lvl'] < (27.99)):
+        print('No Immediate danger but keep a wary eye')
+    elif (find_clock_c.loc[0,'gauge_lvl'] >= (28.00)) or (find_clock_c.loc[0,'gauge_lvl']<= (32.00)):
+        print('Phase 1 Flood')
+    elif (find_clock_c.loc[0,'gauge_lvl'] >= (32.01)) or (find_clock_c.loc[0,'gauge_lvl'] <= (37.00)):
+        print('Phase 2 Flood')
+    else:
+        print('Phase 3 Flood')
+    print()
+    print()
+    print(road_c)
+    print(road_haz)
+else:
+    find_clock_m = mv.loc[mv['datetime'] == (clock),:].reset_index(drop = True)
+    print(find_clock_m)
+    print()
+    print()
+    if (find_clock_m.loc[0,'gauge_lvl'] < (27.99)):
+        print('No Immediate danger but keep a wary eye')
+    elif (find_clock_m.loc[0,'gauge_lvl'] >= (28.00)) or (find_clock_m.loc[0,'gauge_lvl']<= (32.00)):
+        print('Phase 1 Flood')
+    elif (find_clock_m.loc[0,'gauge_lvl'] >= (32.01)) or (find_clock_m.loc[0,'gauge_lvl'] <= (35.60)):
+        print('Phase 2 Flood')
+    else:
+        print('Phase 3 Flood')
+    print()
+    print()
+    print(road_c)
+    print(road_haz)
